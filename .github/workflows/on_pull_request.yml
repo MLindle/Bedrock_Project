@@ -46,17 +46,17 @@ jobs:
                 LambdaCodeKey=${{ secrets.S3_PATH_BETA }}/function.zip \
                 LambdaFunctionNameProd=${{ secrets.LAMBDA_NAME_PROD }} \
                 LambdaFunctionNameBeta=${{ secrets.LAMBDA_NAME_BETA }} \
-                EventBucketName=${{ secrets.S3_BUCKET_BETA }} \
+                EventBucketName=${{ secrets.S3_BUCKET }} \
                 StageName=beta
 
       - name: Deploy S3 Data Bucket stack
         run: |
             aws cloudformation deploy \
-            --stack-name ${{ secrets.CF_STACK_NAME_AUDIO_PIPELINE_3 }} \
+            --stack-name ${{ secrets.CFN_STACK_BEDROCK_3 }} \
             --template-file infrastructure/cloudformation/S3DataBucket.yml \
             --capabilities CAPABILITY_NAMED_IAM \
             --parameter-overrides \
-                LambdaCodeBucket=${{ secrets.S3_BUCKET_BETA }}
+                LambdaCodeBucket=${{ secrets.S3_BUCKET }}
 
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -69,8 +69,8 @@ jobs:
 
       - name: Upload audio file to S3 to trigger Lambda
         env:
-            S3_BUCKET: ${{ secrets.S3_BUCKET_BETA }}
+            S3_BUCKET: ${{ secrets.S3_BUCKET }}
             S3_PATH:   ${{ secrets.S3_PATH_BETA }}
             S3_PREFIX: ${{ secrets.S3_PATH_UPLOADS }}
         run: |
-            aws s3 sync "audio_inputs/" "s3://$S3_BUCKET/${S3_PATH%}/$S3_PREFIX/"
+            aws s3 sync "prompt_inputs/" "s3://$S3_BUCKET/${S3_PATH%}/$S3_PREFIX/"

@@ -113,48 +113,48 @@ Resources:
       #     LOG_LEVEL: INFO
 
 
-  # AppAccessPolicy:
-  #   Type: AWS::IAM::Policy
-  #   Properties:
-  #     PolicyName: Bedrock-AppAccess
-  #     Roles: [ !Ref LambdaExecutionRole ]
-  #     PolicyDocument:
-  #       Version: "2012-10-17"
-  #       Statement:
-  #         - Sid: Transcribe
-  #           Effect: Allow
-  #           Action:
-  #             - transcribe:StartTranscriptionJob
-  #             - transcribe:GetTranscriptionJob
-  #           Resource: "*"
+  AppAccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: Bedrock-AppAccess
+      Roles: [ !Ref LambdaExecutionRole ]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          # - Sid: Transcribe
+          #   Effect: Allow
+          #   Action:
+          #     - transcribe:StartTranscriptionJob
+          #     - transcribe:GetTranscriptionJob
+          #   Resource: "*"
 
-  #         - Sid: Translate
-  #           Effect: Allow
-  #           Action: translate:TranslateText
-  #           Resource: "*"
+          # - Sid: Translate
+          #   Effect: Allow
+          #   Action: translate:TranslateText
+          #   Resource: "*"
 
-  #         - Sid: Polly
-  #           Effect: Allow
-  #           Action: polly:SynthesizeSpeech
-  #           Resource: "*"
+          # - Sid: Polly
+          #   Effect: Allow
+          #   Action: polly:SynthesizeSpeech
+          #   Resource: "*"
 
-  #         - Sid: DebugGetBucketLocation
-  #           Effect: Allow
-  #           Action: s3:GetBucketLocation
-  #           Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}"
+          # - Sid: DebugGetBucketLocation
+          #   Effect: Allow
+          #   Action: s3:GetBucketLocation
+          #   Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}"
 
-  #         - Sid: DebugHeadObject
-  #           Effect: Allow
-  #           Action: s3:GetObject
-  #           Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/*"
+          # - Sid: DebugHeadObject
+          #   Effect: Allow
+          #   Action: s3:GetObject
+          #   Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/*"
 
-  #         - Sid: PutOutputs
-  #           Effect: Allow
-  #           Action:
-  #             - s3:PutObject
-  #           Resource:
-  #             - !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/beta/*"
-  #             - !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/prod/*"
+          - Sid: PutOutputs
+            Effect: Allow
+            Action:
+              - s3:PutObject
+            Resource:
+              - !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/beta/*"
+              - !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/prod/*"
 
 
 Outputs:
