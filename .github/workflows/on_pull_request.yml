@@ -67,7 +67,7 @@ jobs:
 
       - uses: actions/checkout@v5
 
-      - name: Upload audio file to S3 to trigger Lambda
+      - name: Upload file to S3 to trigger Lambda
         env:
             S3_BUCKET: ${{ secrets.S3_BUCKET }}
             S3_PATH:   ${{ secrets.S3_PATH_BETA }}
