@@ -121,32 +121,11 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          # - Sid: Transcribe
-          #   Effect: Allow
-          #   Action:
-          #     - transcribe:StartTranscriptionJob
-          #     - transcribe:GetTranscriptionJob
-          #   Resource: "*"
-
-          # - Sid: Translate
-          #   Effect: Allow
-          #   Action: translate:TranslateText
-          #   Resource: "*"
-
-          # - Sid: Polly
-          #   Effect: Allow
-          #   Action: polly:SynthesizeSpeech
-          #   Resource: "*"
-
-          # - Sid: DebugGetBucketLocation
-          #   Effect: Allow
-          #   Action: s3:GetBucketLocation
-          #   Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}"
-
-          # - Sid: DebugHeadObject
-          #   Effect: Allow
-          #   Action: s3:GetObject
-          #   Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/*"
+        
+          - Sid: Bedrock
+            Effect: Allow
+            Action: bedrock:InvokeModel
+            Resource: "*"
 
           - Sid: PutOutputs
             Effect: Allow
