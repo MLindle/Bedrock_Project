@@ -52,6 +52,10 @@ Resources:
                   - s3:PutObject
                   - s3:GetObject
                 Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/*"
+              - Sid: ListBucketForPrompts
+                Effect: Allow
+                Action: s3:ListBucket
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}"
 
   LambdaBasicExecutionPolicy:
     Type: AWS::IAM::Policy
