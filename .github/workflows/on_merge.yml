@@ -1,4 +1,4 @@
-name: Upload and deploy BETA
+name: Upload and deploy PROD
 
 on:
   push:
