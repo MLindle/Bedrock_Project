@@ -4,7 +4,7 @@ def lambda_handler(event, context):
     bedrock = boto3.client('bedrock-runtime', region_name='us-east-1')
     s3 = boto3.client('s3')
 
-    OUTPUT_FOLDER = os.environ('OUTPUT_FOLDER', 'prompt_outputs/')
+    OUTPUT_FOLDER = os.environ.get('OUTPUT_FOLDER', 'prompt_outputs/')
     OUTPUT_BUCKET = os.environ.get('OUTPUT_BUCKET')
 
     payload = {
