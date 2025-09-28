@@ -83,14 +83,12 @@ Resources:
       Code:
         S3Bucket: !Ref LambdaCodeBucket
         S3Key: !Ref LambdaCodeKey
-      # Environment:
-      #   Variables:
+        Environment:
+          Variables:
       #     STAGE: beta
-      #     OUTPUT_FOLDER: audio-outputs
-      #     SOURCE_LANG: en-US
-      #     TARGET_LANG: es
-      #     POLLY_VOICE: Lupe
-      #     LOG_LEVEL: INFO
+            OUTPUT_FOLDER: prompt_outputs
+            OUTPUT_BUCKET: !Ref EventBucketName
+
 
   LambdaFunctionProd:
     Type: AWS::Lambda::Function
@@ -103,14 +101,11 @@ Resources:
       Code:
         S3Bucket: !Ref LambdaCodeBucket
         S3Key: !Ref LambdaCodeKey
-      # Environment:
-      #   Variables:
-      #     STAGE: prod
-      #     OUTPUT_FOLDER: audio-outputs
-      #     SOURCE_LANG: en-US
-      #     TARGET_LANG: es
-      #     POLLY_VOICE: Lupe
-      #     LOG_LEVEL: INFO
+      Environment:
+        Variables:
+          #STAGE: prod
+          OUTPUT_FOLDER: prompt_outputs
+          OUTPUT_BUCKET: !Ref EventBucketName
 
 
   AppAccessPolicy:

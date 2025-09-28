@@ -19,14 +19,14 @@ Resources:
               S3Key:
                 Rules:
                   - Name: prefix
-                    Value: beta/audio_inputs/
+                    Value: beta/prompt_inputs/
           - Event: "s3:ObjectCreated:*"
             Function: !ImportValue Bedrock-LambdaProdArn
             Filter:
               S3Key:
                 Rules:
                   - Name: prefix
-                    Value: prod/audio_inputs/
+                    Value: prod/prompt_inputs/
 
   # S3EventBucketPolicy:
   #   Type: AWS::S3::BucketPolicy
