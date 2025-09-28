@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     INPUT_FOLDER  = os.environ.get("INPUT_FOLDER", "prompt_inputs/")
 
     def load_payload_from_s3():
-        obj = s3.get_object(Bucket=OUTPUT_BUCKET, Key=f"{INPUT_FOLDER}prompt_payload.json")
+        obj = s3.get_object(Bucket=OUTPUT_BUCKET, Key=f"{INPUT_FOLDER}sea_prompt.json")
         return json.loads(obj['Body'].read().decode('utf-8'))
     
     def load_template_from_s3():
