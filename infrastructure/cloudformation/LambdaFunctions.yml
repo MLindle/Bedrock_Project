@@ -83,11 +83,11 @@ Resources:
       Code:
         S3Bucket: !Ref LambdaCodeBucket
         S3Key: !Ref LambdaCodeKey
-        Environment:
-          Variables:
-      #     STAGE: beta
-            OUTPUT_FOLDER: prompt_outputs
-            OUTPUT_BUCKET: !Ref EventBucketName
+      Environment:
+        Variables:
+    #     STAGE: beta
+          OUTPUT_FOLDER: prompt_outputs
+          OUTPUT_BUCKET: !Ref EventBucketName
 
 
   LambdaFunctionProd:
