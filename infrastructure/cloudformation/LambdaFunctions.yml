@@ -98,7 +98,7 @@ Resources:
       Environment:
         Variables:
     #     STAGE: beta
-          OUTPUT_FOLDER: prompt_outputs
+          OUTPUT_FOLDER: prompt_outputs/
           OUTPUT_BUCKET: !Ref EventBucketName
 
 
@@ -116,7 +116,7 @@ Resources:
       Environment:
         Variables:
           #STAGE: prod
-          OUTPUT_FOLDER: prompt_outputs
+          OUTPUT_FOLDER: prompt_outputs/
           OUTPUT_BUCKET: !Ref EventBucketName
 
 
