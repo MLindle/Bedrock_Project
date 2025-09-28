@@ -15,7 +15,7 @@ def lambda_handler(event, context):
         return json.loads(obj['Body'].read().decode('utf-8'))
     
     def load_template_from_s3():
-        obj = s3.get_object(Bucket=OUTPUT_BUCKET, Key=f"{INPUT_FOLDER}prompt_template_1.txt")
+        obj = s3.get_object(Bucket=OUTPUT_BUCKET, Key=f"{STAGE}/{INPUT_FOLDER}prompt_template_1.txt")
         return obj['Body'].read().decode('utf-8')
 
     payload = load_payload_from_s3()
@@ -45,7 +45,7 @@ def lambda_handler(event, context):
     """
     #print(html)
 
-    key = f"{OUTPUT_FOLDER}sea_poem.html"
+    key = f"{STAGE}/{OUTPUT_FOLDER}sea_poem.html"
 
     s3.put_object(
         Bucket=OUTPUT_BUCKET,
