@@ -1,0 +1,41 @@
+name: Upload and deploy BETA
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  deploy_and_upload_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+            aws-access-key-id:      ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key:  ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+            aws-region:             ${{ secrets.AWS_REGION }}
+
+      - name: Upload template file to S3
+        env:
+            S3_BUCKET: ${{ secrets.S3_BUCKET }}
+            S3_PATH:   ${{ secrets.S3_PATH_PROD }}
+            S3_PREFIX: ${{ secrets.S3_PATH_UPLOADS }}
+        run: |
+            aws s3 sync "prompt_templates/" "s3://$S3_BUCKET/${S3_PATH%}/$S3_PREFIX/"
+
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+            aws-access-key-id:      ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key:  ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+            aws-region:             ${{ secrets.AWS_REGION }}
+
+      - uses: actions/checkout@v5
+
+      - name: Upload file to S3 to trigger Lambda
+        env:
+            S3_BUCKET: ${{ secrets.S3_BUCKET }}
+            S3_PATH:   ${{ secrets.S3_PATH_PROD }}
+            S3_PREFIX: ${{ secrets.S3_PATH_UPLOADS }}
+        run: |
+            aws s3 sync "prompt_inputs/" "s3://$S3_BUCKET/${S3_PATH%}/$S3_PREFIX/"

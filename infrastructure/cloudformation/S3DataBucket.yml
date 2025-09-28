@@ -27,23 +27,3 @@ Resources:
                 Rules:
                   - Name: prefix
                     Value: prod/prompt_inputs/
-
-  # S3EventBucketPolicy:
-  #   Type: AWS::S3::BucketPolicy
-  #   Properties:
-  #     Bucket: !Ref S3Bucket
-  #     PolicyDocument:
-  #       Version: "2012-10-17"
-  #       Statement:
-  #         - Sid: BedrockGetandPut
-  #           Effect: Allow
-  #           Principal: { Service: bedrock-runtime.amazonaws.com }
-  #           Action:
-  #             - s3:GetObject
-  #             - s3:GetObjectVersion
-  #             - s3:PutObject
-  #           Resource:
-  #             - !Sub "arn:${AWS::Partition}:s3:::${S3Bucket}/*"
-  #           Condition:
-  #             StringEquals:
-  #               aws:SourceAccount: !Ref AWS::AccountId
