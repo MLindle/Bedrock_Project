@@ -7,19 +7,11 @@ def lambda_handler(event, context):
     OUTPUT_FOLDER = os.environ.get('OUTPUT_FOLDER', 'prompt_outputs/')
     OUTPUT_BUCKET = os.environ.get('OUTPUT_BUCKET')
 
-    payload = {
-        "anthropic_version": "bedrock-2023-05-31",
-        "messages": [
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": "Write a poem about the sea."}
-                ]
-            }
-        ],
-        "max_tokens": 1024,
-        "temperature": 0.7
-    }
+    def load_payload_from_s3():
+        obj = s3.get_object(Bucket=OUTPUT_BUCKET, Key=f"{OUTPUT_FOLDER}prompt_payload.json")
+        return json.loads(obj['Body'].read().decode('utf-8'))
+
+    payload = load_payload_from_s3
 
     response = bedrock.invoke_model(
         modelId="anthropic.claude-3-sonnet-20240229-v1:0",
