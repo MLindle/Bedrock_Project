@@ -10,8 +10,15 @@ def lambda_handler(event, context):
     def load_payload_from_s3():
         obj = s3.get_object(Bucket=OUTPUT_BUCKET, Key=f"{OUTPUT_FOLDER}prompt_payload.json")
         return json.loads(obj['Body'].read().decode('utf-8'))
+    
+    def load_template_from_s3():
+        obj = s3.get_object(Bucket=OUTPUT_BUCKET, Key=f"{OUTPUT_FOLDER}prompt_template_1.txt")
+        return obj['Body'].read().decode('utf-8')
 
-    payload = load_payload_from_s3
+    payload = load_payload_from_s3()
+    template = load_template_from_s3()
+
+    payload["system"] = template
 
     response = bedrock.invoke_model(
         modelId="anthropic.claude-3-sonnet-20240229-v1:0",
