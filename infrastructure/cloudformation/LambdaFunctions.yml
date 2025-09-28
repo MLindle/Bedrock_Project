@@ -39,6 +39,18 @@ Resources:
             Principal:
               Service: lambda.amazonaws.com
             Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: allow-s3-write-outputs
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: PutObjectsToOutputBucket
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/*"
 
   LambdaBasicExecutionPolicy:
     Type: AWS::IAM::Policy

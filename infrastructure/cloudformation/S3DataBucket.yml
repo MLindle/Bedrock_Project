@@ -35,12 +35,13 @@ Resources:
   #     PolicyDocument:
   #       Version: "2012-10-17"
   #       Statement:
-  #         - Sid: TranscribeReadAll
+  #         - Sid: BedrockGetandPut
   #           Effect: Allow
-  #           Principal: { Service: transcribe.amazonaws.com }
+  #           Principal: { Service: bedrock-runtime.amazonaws.com }
   #           Action:
   #             - s3:GetObject
   #             - s3:GetObjectVersion
+  #             - s3:PutObject
   #           Resource:
   #             - !Sub "arn:${AWS::Partition}:s3:::${S3Bucket}/*"
   #           Condition:
