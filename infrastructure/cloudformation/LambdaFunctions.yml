@@ -102,7 +102,7 @@ Resources:
         S3Key: !Ref LambdaCodeKey
       Environment:
         Variables:
-    #     STAGE: beta
+          STAGE: beta
           INPUT_FOLDER: prompt_inputs/
           OUTPUT_FOLDER: prompt_outputs/
           OUTPUT_BUCKET: !Ref EventBucketName
@@ -121,7 +121,7 @@ Resources:
         S3Key: !Ref LambdaCodeKey
       Environment:
         Variables:
-          #STAGE: prod
+          STAGE: prod
           INPUT_FOLDER: prompt_inputs/
           OUTPUT_FOLDER: prompt_outputs/
           OUTPUT_BUCKET: !Ref EventBucketName
