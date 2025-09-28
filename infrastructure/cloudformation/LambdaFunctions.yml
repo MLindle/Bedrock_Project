@@ -103,6 +103,7 @@ Resources:
       Environment:
         Variables:
     #     STAGE: beta
+          INPUT_FOLDER: prompt_inputs/
           OUTPUT_FOLDER: prompt_outputs/
           OUTPUT_BUCKET: !Ref EventBucketName
 
@@ -121,6 +122,7 @@ Resources:
       Environment:
         Variables:
           #STAGE: prod
+          INPUT_FOLDER: prompt_inputs/
           OUTPUT_FOLDER: prompt_outputs/
           OUTPUT_BUCKET: !Ref EventBucketName
 

@@ -7,12 +7,14 @@ def lambda_handler(event, context):
     OUTPUT_FOLDER = os.environ.get('OUTPUT_FOLDER', 'prompt_outputs/')
     OUTPUT_BUCKET = os.environ.get('OUTPUT_BUCKET')
 
+    INPUT_FOLDER  = os.environ.get("INPUT_FOLDER", "prompt_inputs/")
+
     def load_payload_from_s3():
-        obj = s3.get_object(Bucket=OUTPUT_BUCKET, Key=f"{OUTPUT_FOLDER}prompt_payload.json")
+        obj = s3.get_object(Bucket=OUTPUT_BUCKET, Key=f"{INPUT_FOLDER}prompt_payload.json")
         return json.loads(obj['Body'].read().decode('utf-8'))
     
     def load_template_from_s3():
-        obj = s3.get_object(Bucket=OUTPUT_BUCKET, Key=f"{OUTPUT_FOLDER}prompt_template_1.txt")
+        obj = s3.get_object(Bucket=OUTPUT_BUCKET, Key=f"{INPUT_FOLDER}prompt_template_1.txt")
         return obj['Body'].read().decode('utf-8')
 
     payload = load_payload_from_s3()
