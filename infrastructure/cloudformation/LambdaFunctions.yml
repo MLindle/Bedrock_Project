@@ -8,7 +8,7 @@ Parameters:
 
   EventBucketName:
     Type: String
-    Description: Name of the data/event bucket (where audio is uploaded)
+    Description: Name of the data/event bucket
 
   LambdaFunctionNameBeta:
     Type: String
