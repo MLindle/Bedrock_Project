@@ -46,10 +46,11 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              - Sid: PutObjectsToOutputBucket
+              - Sid: PutGetObjectsToOutputBucket
                 Effect: Allow
                 Action:
                   - s3:PutObject
+                  - s3:GetObject
                 Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/*"
 
   LambdaBasicExecutionPolicy:
