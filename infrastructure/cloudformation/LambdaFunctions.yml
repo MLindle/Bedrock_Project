@@ -1,0 +1,159 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Deploy resources for bedrock project
+
+Parameters:
+  StageName:
+    Type: String
+    Default: "audio-outputs/"
+
+  EventBucketName:
+    Type: String
+    Description: Name of the data/event bucket (where audio is uploaded)
+
+  LambdaFunctionNameBeta:
+    Type: String
+    Default: Bedrock-Lambda-Beta
+    Description: Name for the Lambda function
+
+  LambdaFunctionNameProd:
+    Type: String
+    Default: Bedrock-Lambda-Prod
+    Description: Name for the Lambda function
+
+  LambdaCodeBucket:
+    Type: String
+    Description: S3 bucket where the Lambda deployment package is stored
+
+  LambdaCodeKey:
+    Type: String
+    Description: S3 key for the Lambda deployment package
+
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: allow-s3-write-outputs
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: PutGetObjectsToOutputBucket
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/*"
+              - Sid: ListBucketForPrompts
+                Effect: Allow
+                Action: s3:ListBucket
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}"
+
+  LambdaBasicExecutionPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: LambdaBasicExecution
+      Roles:
+        - !Ref LambdaExecutionRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: "arn:aws:logs:*:*:*"
+
+  LambdaInvokePermissionBeta:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref LambdaFunctionBeta
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+
+  LambdaInvokePermissionProd:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref LambdaFunctionProd
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+
+  LambdaFunctionBeta:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref LambdaFunctionNameBeta
+      Handler: process_prompt.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: python3.12
+      Timeout: 120
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: !Ref LambdaCodeKey
+      Environment:
+        Variables:
+          STAGE: beta
+          INPUT_FOLDER: prompt_inputs/
+          OUTPUT_FOLDER: prompt_outputs/
+          OUTPUT_BUCKET: !Ref EventBucketName
+
+
+  LambdaFunctionProd:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref LambdaFunctionNameProd
+      Handler: process_prompt.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: python3.12
+      Timeout: 120
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: !Ref LambdaCodeKey
+      Environment:
+        Variables:
+          STAGE: prod
+          INPUT_FOLDER: prompt_inputs/
+          OUTPUT_FOLDER: prompt_outputs/
+          OUTPUT_BUCKET: !Ref EventBucketName
+
+
+  AppAccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: Bedrock-AppAccess
+      Roles: [ !Ref LambdaExecutionRole ]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        
+          - Sid: Bedrock
+            Effect: Allow
+            Action: bedrock:InvokeModel
+            Resource: "*"
+
+          - Sid: PutOutputs
+            Effect: Allow
+            Action:
+              - s3:PutObject
+            Resource:
+              - !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/beta/*"
+              - !Sub "arn:${AWS::Partition}:s3:::${EventBucketName}/prod/*"
+
+
+Outputs:
+  AudioPipelineLambdaBetaArn:
+    Value: !GetAtt LambdaFunctionBeta.Arn
+    Export: { Name: Bedrock-LambdaBetaArn }
+  AudioPipelineLambdaProdArn:
+    Value: !GetAtt LambdaFunctionProd.Arn
+    Export: { Name: Bedrock-LambdaProdArn }

@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Deploy resources for bedrock project
+
+Parameters:
+  LambdaCodeBucket:
+    Type: String
+
+Resources:
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref LambdaCodeBucket
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: "s3:ObjectCreated:*"
+            Function: !ImportValue Bedrock-LambdaBetaArn
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: beta/prompt_inputs/
+          - Event: "s3:ObjectCreated:*"
+            Function: !ImportValue Bedrock-LambdaProdArn
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: prod/prompt_inputs/
