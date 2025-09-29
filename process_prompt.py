@@ -58,3 +58,5 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': json.dumps({"bucket": OUTPUT_BUCKET, "key": key}),
     }
+
+# Change to trigger workflow
